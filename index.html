@@ -1,0 +1,626 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>떼루아본 피부 자가진단</title>
+    <!-- 웹 폰트 로드 -->
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
+    
+    <style>
+        :root {
+            --bg-color: #F4F2EC;
+            --card-bg: #FFFFFF;
+            --point-color: #902533;
+            --point-light: rgba(144, 37, 51, 0.08);
+            --text-color: #222222;
+            --light-text: #888888;
+            --border-color: #E6E3DB;
+            --shadow: 0 8px 24px rgba(0, 0, 0, 0.05);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
+        body {
+            background-color: #E8E5DC;
+            font-family: 'Pretendard', sans-serif;
+            color: var(--text-color);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        #app-container {
+            width: 100%;
+            max-width: 440px;
+            height: 100vh;
+            max-height: 880px;
+            background-color: var(--bg-color);
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.08);
+            display: flex;
+            flex-direction: column;
+        }
+
+        @media (min-width: 480px) {
+            #app-container {
+                height: 92vh;
+                border-radius: 20px;
+            }
+        }
+
+        .serif { font-family: 'Noto Serif KR', serif; }
+
+        .page {
+            display: none;
+            padding: 32px 24px;
+            height: 100%;
+            flex-direction: column;
+            overflow-y: auto;
+            animation: smoreFadeIn 0.35s ease-out;
+        }
+        .page.active { display: flex; }
+
+        @keyframes smoreFadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .btn-primary {
+            background-color: var(--point-color);
+            color: #ffffff;
+            border: none;
+            padding: 16px 28px;
+            font-size: 15px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            transition: all 0.2s ease;
+            box-shadow: 0 4px 12px rgba(144, 37, 51, 0.2);
+        }
+        .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
+
+        .btn-secondary {
+            background-color: transparent;
+            color: var(--point-color);
+            border: 1px solid var(--point-color);
+            padding: 14px 28px;
+            font-size: 14px;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            text-align: center;
+            width: 100%;
+            margin-top: 10px;
+            transition: all 0.2s ease;
+        }
+
+        /* 메인 페이지 */
+        #intro-page {
+            justify-content: space-between;
+            align-items: center;
+            text-align: center;
+            padding: 48px 24px 36px;
+        }
+
+        .intro-top {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            width: 100%;
+        }
+
+        .intro-logo {
+            width: 90px;
+            height: auto;
+            margin-bottom: 24px;
+            opacity: 0.9;
+        }
+
+        .intro-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 12px;
+            box-shadow: var(--shadow);
+            width: 100%;
+            max-width: 280px;
+            margin-bottom: 24px;
+            border: 1px solid var(--border-color);
+        }
+
+        .intro-main-img {
+            width: 100%;
+            height: auto;
+            border-radius: 10px;
+            display: block;
+            object-fit: cover;
+        }
+
+        .intro-subject {
+            font-size: 18px;
+            line-height: 1.5;
+            color: var(--text-color);
+            font-weight: 600;
+            word-break: keep-all;
+            margin-top: 8px;
+        }
+
+        /* 질문 페이지 */
+        .quiz-header {
+            width: 100%;
+            margin-bottom: 28px;
+        }
+
+        .step-counter {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 13px;
+            font-weight: 600;
+            color: var(--point-color);
+            margin-bottom: 8px;
+        }
+
+        .progress-track {
+            width: 100%;
+            height: 6px;
+            background-color: var(--border-color);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background-color: var(--point-color);
+            width: 10%;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+
+        .question-box {
+            margin-bottom: 32px;
+        }
+
+        .question-text {
+            font-size: 20px;
+            font-weight: 600;
+            line-height: 1.45;
+            color: var(--text-color);
+            word-break: keep-all;
+        }
+
+        .options-container {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .option-card {
+            background-color: var(--card-bg);
+            border: 1.5px solid var(--border-color);
+            padding: 18px 20px;
+            border-radius: 14px;
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            text-align: left;
+        }
+
+        .option-card:active, .option-card.selected {
+            border-color: var(--point-color);
+            background-color: var(--point-light);
+            transform: translateY(-1px);
+        }
+
+        .option-badge {
+            width: 28px;
+            height: 28px;
+            min-width: 28px;
+            border-radius: 50%;
+            background-color: var(--bg-color);
+            color: var(--light-text);
+            font-size: 13px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.2s ease;
+        }
+
+        .option-card.selected .option-badge {
+            background-color: var(--point-color);
+            color: #ffffff;
+        }
+
+        .option-label {
+            font-size: 15px;
+            line-height: 1.45;
+            color: var(--text-color);
+            font-weight: 500;
+            word-break: keep-all;
+        }
+
+        /* 결과 페이지 디자인 수정 */
+        #result-page {
+            padding: 36px 24px;
+        }
+
+        .result-header {
+            text-align: center;
+            margin-bottom: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .result-logo {
+            width: 90px;
+            height: auto;
+            margin-bottom: 20px;
+            opacity: 0.9;
+        }
+
+        .result-title {
+            font-size: 26px;
+            color: var(--point-color);
+            font-weight: 600;
+        }
+
+        .result-subtitle {
+            font-size: 18px;
+            font-weight: 700;
+            color: var(--point-color);
+            text-align: center;
+            margin-top: 8px;
+            word-break: keep-all;
+        }
+
+        /* 설명글 중앙 정렬 */
+        .result-card {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 22px;
+            border: 1px solid var(--border-color);
+            box-shadow: var(--shadow);
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #444444;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        .recommend-card {
+            background: linear-gradient(135deg, #902533 0%, #6B1D23 100%);
+            color: #ffffff;
+            border-radius: 16px;
+            padding: 24px 20px;
+            text-align: center;
+            box-shadow: 0 8px 20px rgba(144, 37, 51, 0.25);
+            margin-bottom: 28px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .recommend-badge {
+            font-size: 12px;
+            opacity: 0.9;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+            font-weight: 600;
+        }
+
+        .recommend-title {
+            font-size: 16px;
+            font-weight: 600;
+            line-height: 1.5;
+            word-break: keep-all;
+        }
+
+        .recommend-img {
+            width: 100%;
+            max-width: 180px;
+            height: auto;
+            border-radius: 10px;
+            margin-top: 18px;
+            object-fit: cover;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .action-group {
+            margin-top: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+    </style>
+</head>
+<body>
+
+<div id="app-container">
+    
+    <!-- 1페이지: 메인 -->
+    <div id="intro-page" class="page active">
+        <div class="intro-top">
+            <img src="terroirbon-identity_gray.png" alt="terroirbon logo" class="intro-logo">
+            
+            <div class="intro-card">
+                <img src="1page image.jpg" alt="메인 이미지" class="intro-main-img">
+            </div>
+            
+            <p class="intro-subject serif">1분 자가진단으로 알아보는<br>떼루아본 맞춤 포뮬라 솔루션</p>
+        </div>
+        
+        <button class="btn-primary" onclick="startQuiz()">시작하기</button>
+    </div>
+
+    <!-- 2~11페이지: 질문 -->
+    <div id="question-page" class="page">
+        <div class="quiz-header">
+            <div class="step-counter">
+                <span>진단 진행률</span>
+                <span id="step-text">1 / 10</span>
+            </div>
+            <div class="progress-track">
+                <div class="progress-fill" id="progress-bar"></div>
+            </div>
+        </div>
+
+        <div class="question-box">
+            <h2 class="question-text" id="q-title">질문 타이틀</h2>
+        </div>
+        
+        <div class="options-container" id="options"></div>
+    </div>
+
+    <!-- 결과 페이지 -->
+    <div id="result-page" class="page">
+        <div class="result-header">
+            <!-- 상단 로고 -->
+            <img src="terroirbon-identity_gray.png" alt="terroirbon logo" class="result-logo">
+            <!-- 결과 타이틀 (Fresh Grape 등) -->
+            <h1 class="result-title serif" id="result-type">Fresh Grape</h1>
+            <!-- 수분 충전이 필요한 피부 -> 수정 문구 -->
+            <p class="result-subtitle" id="result-subtitle">겉촉속바! 수부지형 피부</p>
+        </div>
+
+        <!-- 중앙 정렬 설명 카드 -->
+        <div class="result-card" id="result-desc">
+            진단 결과 설명
+        </div>
+        
+        <div class="recommend-card">
+            <!-- 솔루션 타이틀 변경 -->
+            <p class="recommend-badge">떼루아본 LAB의 솔루션</p>
+            <p class="recommend-title serif" id="result-product">
+                추천 포뮬라
+            </p>
+            <!-- 추천 제품 이미지 영역 -->
+            <img id="result-product-img" src="" alt="추천 제품 이미지" class="recommend-img">
+        </div>
+        
+        <div class="action-group">
+            <!-- 버튼명 수정 -->
+            <button class="btn-primary" onclick="copyResultLink()">진단 인증 후 상품 받기</button>
+            <button class="btn-secondary" onclick="location.reload()">다시 진단하기</button>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    const questions = [
+        {
+            title: "Q1. 세안 후 피부가 당긴다.",
+            options: [
+                { text: "그렇다", type: "A", weight: 1 },
+                { text: "아니다", type: "NONE", weight: 0 }
+            ]
+        },
+        {
+            title: "Q2. 낮부터 피부 겉에 유분이 올라온다.",
+            options: [
+                { text: "그렇다", type: "A", weight: 1 },
+                { text: "아니다", type: "NONE", weight: 0 }
+            ]
+        },
+        {
+            title: "Q3. 작은 온도 변화에도 피부가 쉽게 붉어진다.",
+            options: [
+                { text: "그렇다", type: "B", weight: 1 },
+                { text: "아니다", type: "NONE", weight: 0 }
+            ]
+        },
+        {
+            title: "Q4. 컨디션이 조금만 안 좋아도 트러블이 올라온다.",
+            options: [
+                { text: "그렇다", type: "B", weight: 1 },
+                { text: "아니다", type: "NONE", weight: 0 }
+            ]
+        },
+        {
+            title: "Q5. 나는 순한 제품이 아니면 화장품을 못 쓴다.",
+            options: [
+                { text: "그렇다", type: "B", weight: 1 },
+                { text: "아니다", type: "NONE", weight: 0 }
+            ]
+        },
+        {
+            title: "Q6. 내 피부가 자주 칙칙해 보인다.",
+            options: [
+                { text: "그렇다", type: "D", weight: 1 },
+                { text: "아니다", type: "NONE", weight: 0 }
+            ]
+        },
+        {
+            title: "Q7. 내 피부는 윤기가 없어 보인다.",
+            options: [
+                { text: "그렇다", type: "D", weight: 1 },
+                { text: "아니다", type: "NONE", weight: 0 }
+            ]
+        },
+        {
+            title: "Q8. 베개 자국이 전보다 느리게 지워지는 느낌이다.",
+            options: [
+                { text: "그렇다", type: "C", weight: 1 },
+                { text: "아니다", type: "NONE", weight: 0 }
+            ]
+        },
+        {
+            title: "Q9. 피부 탄력의 텐션이 떨어진 게 눈에 띈다.",
+            options: [
+                { text: "그렇다", type: "C", weight: 1 },
+                { text: "아니다", type: "NONE", weight: 0 }
+            ]
+        },
+        {
+            title: "Q10. 지금 내 피부에 가장 원하는 변화는?",
+            options: [
+                { text: "즉각적인 수분 충전", type: "A", weight: 2 },
+                { text: "순한 진정 케어", type: "B", weight: 2 },
+                { text: "피부 속 탄력 케어", type: "C", weight: 2 },
+                { text: "자연스러운 광채 케어", type: "D", weight: 2 }
+            ]
+        }
+    ];
+
+    // 결과 데이터 구조 업데이트 (타이틀, 서브타이틀, 제품 이미지 경로 추가)
+    const results = {
+        "A": {
+            type: "Fresh Grape",
+            subtitle: "겉촉속바! 수부지형 피부",
+            desc: "피부 겉은 오일리해 보일 수 있으나 속은 수분이 바짝 말라있는 상태에요.<br>즉각적인 수분 공급을 통해 피부 속 수분케어가 필요합니다.",
+            product: "가볍고 산뜻한 마무리감을 가진<br><strong>그레이프셀 버블 에센스 토너</strong>를 처방해드립니다.",
+            img: "T_y.png" // 
+        },
+        "B": {
+            type: "Deep Grape",
+            subtitle: "여린 민감성 피부",
+            desc: "외부 자극과 스트레스로 인해 피부가 민감해진 상태에요.<br>피부 컨디션을 안정시키는 순한케어가 필요합니다.",
+            product: "순하고 빠르게 건강한 피부로 회복시켜주는<br><strong>그레이프셀 탱탱 텐션 토탈 마스크팩</strong>을 처방해드립니다.",
+            img: "M_y.png" // 
+        },
+        "C": {
+            type: "Rich Grape",
+            subtitle: "탄력 부족형 피부",
+            desc: "피부의 탄력이 떨어지기 시작한 상태에요.<br>밀도 높은 퍼밍 탄력 케어로 리프팅이 필요합니다.",
+            product: "급속도 올인원 케어 전문<br><strong>그레이프셀 퍼밍 앰플</strong>을 처방해드립니다.",
+            img: "A_y.jpg" // 
+        },
+        "D": {
+            type: "Juicy Grape",
+            subtitle: "피부결이 거친 피부",
+            desc: "피부 턴오버 주기가 둔화되어 칙칙하고 윤기가 부족한 상태에요.<br>맑고 자연스러운 광채를 부여하는 케어가 필요합니다.",
+            product: "피부장벽을 보호하면서 광채감을 선사하는<br><strong>그레이프셀 핑크캡슐 크림</strong>을 처방해드립니다.",
+            img: "C_y.jpg" // 
+        }
+    };
+
+    let currentQuestionIndex = 0;
+    let scores = { A: 0, B: 0, C: 0, D: 0 };
+    let isSelecting = false;
+
+    function startQuiz() {
+        document.getElementById('intro-page').classList.remove('active');
+        document.getElementById('question-page').classList.add('active');
+        renderQuestion();
+    }
+
+    function renderQuestion() {
+        isSelecting = false;
+        const q = questions[currentQuestionIndex];
+        
+        document.getElementById('step-text').innerText = `${currentQuestionIndex + 1} / ${questions.length}`;
+        document.getElementById('q-title').innerText = q.title;
+        
+        const progress = ((currentQuestionIndex + 1) / questions.length) * 100;
+        document.getElementById('progress-bar').style.width = progress + '%';
+
+        const optionsDiv = document.getElementById('options');
+        optionsDiv.innerHTML = '';
+        
+        const badges = ['A', 'B', 'C', 'D'];
+        
+        q.options.forEach((option, idx) => {
+            const card = document.createElement('div');
+            card.className = 'option-card';
+            
+            card.innerHTML = `
+                <div class="option-badge">${badges[idx]}</div>
+                <div class="option-label">${option.text}</div>
+            `;
+            
+            card.onclick = () => selectOption(option.type, option.weight, card);
+            optionsDiv.appendChild(card);
+        });
+
+        const page = document.getElementById('question-page');
+        page.style.animation = 'none';
+        page.offsetHeight;
+        page.style.animation = 'smoreFadeIn 0.35s ease-out';
+    }
+
+    function selectOption(type, weight, cardElement) {
+        if (isSelecting) return;
+        isSelecting = true;
+
+        cardElement.classList.add('selected');
+        
+        if (type !== "NONE") {
+            scores[type] += weight;
+        }
+
+        setTimeout(() => {
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                renderQuestion();
+            } else {
+                showResult();
+            }
+        }, 220);
+    }
+
+    function showResult() {
+        let maxScore = -1;
+        let finalType = 'A';
+        
+        for (const type in scores) {
+            if (scores[type] > maxScore) {
+                maxScore = scores[type];
+                finalType = type;
+            }
+        }
+
+        const resultData = results[finalType];
+
+        document.getElementById('result-type').innerText = resultData.type;
+        document.getElementById('result-subtitle').innerText = resultData.subtitle;
+        document.getElementById('result-desc').innerHTML = resultData.desc;
+        document.getElementById('result-product').innerHTML = resultData.product;
+        document.getElementById('result-product-img').src = resultData.img;
+
+        document.getElementById('question-page').classList.remove('active');
+        document.getElementById('result-page').classList.add('active');
+        
+        window.scrollTo(0, 0);
+    }
+
+    function copyResultLink() {
+        navigator.clipboard.writeText(window.location.href).then(() => {
+            alert('진단 페이지 링크가 복사되었습니다!');
+        }).catch(() => {
+            alert('주소창의 링크를 복사해주세요.');
+        });
+    }
+</script>
+</body>
+</html>
