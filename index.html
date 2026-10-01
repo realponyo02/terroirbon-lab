@@ -4,13 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
     <title>떼루아본 피부 자가진단</title>
-    <!-- 웹 폰트 로드 -->
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+KR:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" as="style" crossorigin href="https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.9/dist/web/static/pretendard.css" />
     
     <style>
         :root {
-            --bg-color: #F4F2EC;
+            --bg-color: #FFFFFF;
             --card-bg: #FFFFFF;
             --point-color: #902533;
             --point-light: rgba(144, 37, 51, 0.08);
@@ -22,9 +19,10 @@
 
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
         
-        body {
+        /* 전체 폰트 맑은 고딕 적용 */
+        body, button, input, select, textarea {
             background-color: #E8E5DC;
-            font-family: 'Pretendard', sans-serif;
+            font-family: 'Malgun Gothic', '맑은 고딕', apple-system, sans-serif;
             color: var(--text-color);
             display: flex;
             justify-content: center;
@@ -52,7 +50,7 @@
             }
         }
 
-        .serif { font-family: 'Noto Serif KR', serif; }
+        .serif { font-family: 'Malgun Gothic', '맑은 고딕', sans-serif; }
 
         .page {
             display: none;
@@ -69,34 +67,53 @@
             to { opacity: 1; transform: translateY(0); }
         }
 
+        /* 공통 메인 버튼: 세로 늘어남 완전 차단 및 슬림 가로 직사각형 */
         .btn-primary {
             background-color: var(--point-color);
             color: #ffffff;
             border: none;
-            padding: 16px 28px;
-            font-size: 15px;
+            height: 40px !important;
+            min-height: 40px !important;
+            max-height: 40px !important;
+            flex: none !important;
+            flex-grow: 0 !important;
+            width: fit-content !important;
+            padding: 0 28px !important;
+            font-size: 14px;
             font-weight: 600;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
-            text-align: center;
-            width: 100%;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            margin: 0 auto;
             transition: all 0.2s ease;
-            box-shadow: 0 4px 12px rgba(144, 37, 51, 0.2);
+            box-shadow: 0 3px 10px rgba(144, 37, 51, 0.2);
         }
         .btn-primary:active { transform: scale(0.98); opacity: 0.9; }
 
+        /* 공통 서브 버튼: 세로 늘어남 완전 차단 및 슬림 가로 직사각형 */
         .btn-secondary {
             background-color: transparent;
             color: var(--point-color);
             border: 1px solid var(--point-color);
-            padding: 14px 28px;
-            font-size: 14px;
+            height: 38px !important;
+            min-height: 38px !important;
+            max-height: 38px !important;
+            flex: none !important;
+            flex-grow: 0 !important;
+            width: fit-content !important;
+            padding: 0 24px !important;
+            font-size: 13px;
             font-weight: 600;
-            border-radius: 12px;
+            border-radius: 8px;
             cursor: pointer;
-            text-align: center;
-            width: 100%;
-            margin-top: 10px;
+            display: inline-flex !important;
+            align-items: center;
+            justify-content: center;
+            white-space: nowrap;
+            margin: 0 auto;
             transition: all 0.2s ease;
         }
 
@@ -105,7 +122,7 @@
             justify-content: space-between;
             align-items: center;
             text-align: center;
-            padding: 48px 24px 36px;
+            padding: 24px 24px 36px;
         }
 
         .intro-top {
@@ -115,39 +132,49 @@
             width: 100%;
         }
 
+        /* 로고: 메인 이미지 상단(이미지와 겹치지 않게 바깥에 배치) */
         .intro-logo {
-            width: 90px;
+            width: 120px;
             height: auto;
-            margin-bottom: 24px;
+            margin-bottom: 10px;
             opacity: 0.9;
         }
 
-        .intro-card {
-            background: var(--card-bg);
-            border-radius: 16px;
-            padding: 12px;
-            box-shadow: var(--shadow);
+        /* 메인 이미지 컨테이너 (직각 테두리) */
+        .intro-img-container {
+            position: relative;
             width: 100%;
-            max-width: 280px;
-            margin-bottom: 24px;
-            border: 1px solid var(--border-color);
+            border-radius: 0;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            margin-bottom: 12px;
+            margin-top: 20px;
         }
 
         .intro-main-img {
             width: 100%;
             height: auto;
-            border-radius: 10px;
             display: block;
             object-fit: cover;
+            border-radius: 0;
         }
 
+        /* 메인 이미지 상단 오버레이 문구 */
         .intro-subject {
-            font-size: 18px;
+            position: absolute;
+            top: 100px; /* 이미지 상단 부분에 겹쳐서 위치 */
+            left: 50%;
+            transform: translateX(-50%);
+            width: 100%;
+            padding: 0 16px;
+            font-size: 20px;
             line-height: 1.5;
             color: var(--text-color);
             font-weight: 600;
             word-break: keep-all;
-            margin-top: 8px;
+            margin-top: 0;
+            z-index: 2;
+            text-shadow: 0 1px 4px rgba(255, 255, 255, 0.85);
         }
 
         /* 질문 페이지 */
@@ -183,7 +210,7 @@
         }
 
         .question-box {
-            margin-bottom: 32px;
+            margin-bottom: 28px;
         }
 
         .question-text {
@@ -197,20 +224,20 @@
         .options-container {
             display: flex;
             flex-direction: column;
-            gap: 12px;
+            gap: 10px;
         }
 
         .option-card {
             background-color: var(--card-bg);
             border: 1.5px solid var(--border-color);
-            padding: 18px 20px;
-            border-radius: 14px;
+            padding: 12px 18px;
+            border-radius: 10px;
             display: flex;
             align-items: center;
-            gap: 14px;
+            gap: 12px;
             cursor: pointer;
             transition: all 0.2s ease;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.02);
+            box-shadow: 0 2px 6px rgba(0,0,0,0.02);
             text-align: left;
         }
 
@@ -221,11 +248,11 @@
         }
 
         .option-badge {
-            width: 28px;
-            height: 28px;
-            min-width: 28px;
+            width: 26px;
+            height: 26px;
+            min-width: 26px;
             border-radius: 50%;
-            background-color: var(--bg-color);
+            background-color: #F4F2EC;
             color: var(--light-text);
             font-size: 13px;
             font-weight: 700;
@@ -242,20 +269,20 @@
 
         .option-label {
             font-size: 15px;
-            line-height: 1.45;
+            line-height: 1.4;
             color: var(--text-color);
             font-weight: 500;
             word-break: keep-all;
         }
 
-        /* 결과 페이지 디자인 수정 */
+        /* 결과 페이지 */
         #result-page {
             padding: 36px 24px;
         }
 
         .result-header {
             text-align: center;
-            margin-bottom: 20px;
+            margin-bottom: 16px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -264,37 +291,35 @@
         .result-logo {
             width: 90px;
             height: auto;
-            margin-bottom: 20px;
+            margin-bottom: 10px;
             opacity: 0.9;
         }
 
-        .result-title {
-            font-size: 26px;
-            color: var(--point-color);
-            font-weight: 600;
-        }
-
-        .result-subtitle {
-            font-size: 18px;
-            font-weight: 700;
-            color: var(--point-color);
-            text-align: center;
-            margin-top: 8px;
-            word-break: keep-all;
-        }
-
-        /* 설명글 중앙 정렬 */
         .result-card {
             background: var(--card-bg);
-            border-radius: 16px;
-            padding: 22px;
+            border-radius: 0px;
+            padding: 20px;
             border: 1px solid var(--border-color);
             box-shadow: var(--shadow);
             margin-bottom: 20px;
+            text-align: center;
+            word-break: keep-all;
+        }
+
+        .result-card-subtitle {
+            font-size: 17px;
+            font-weight: 700;
+            color: var(--point-color);
+            margin-bottom: 10px;
+            padding-bottom: 8px;
+            border-bottom: 1px solid var(--border-color);
+            word-break: keep-all;
+        }
+
+        .result-card-desc {
             font-size: 14px;
             line-height: 1.6;
             color: #444444;
-            text-align: center;
             word-break: keep-all;
         }
 
@@ -302,10 +327,10 @@
             background: linear-gradient(135deg, #902533 0%, #6B1D23 100%);
             color: #ffffff;
             border-radius: 16px;
-            padding: 24px 20px;
+            padding: 22px 20px;
             text-align: center;
             box-shadow: 0 8px 20px rgba(144, 37, 51, 0.25);
-            margin-bottom: 28px;
+            margin-bottom: 24px;
             display: flex;
             flex-direction: column;
             align-items: center;
@@ -315,32 +340,43 @@
             font-size: 12px;
             opacity: 0.9;
             letter-spacing: 0.5px;
-            margin-bottom: 12px;
+            margin-bottom: 4px;
             font-weight: 600;
         }
 
+        .recommend-card .result-title {
+            font-size: 21px;
+            color: #FFFFFF;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            margin-bottom: 12px;
+        }
+
         .recommend-title {
-            font-size: 16px;
+            font-size: 15px;
             font-weight: 600;
-            line-height: 1.5;
+            line-height: 1.45;
             word-break: keep-all;
         }
 
         .recommend-img {
             width: 100%;
-            max-width: 180px;
+            max-width: 240px;
             height: auto;
-            border-radius: 10px;
-            margin-top: 18px;
+            border-radius: 16px;
+            margin-top: 16px;
             object-fit: cover;
-            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            box-shadow: 0 6px 16px rgba(0,0,0,0.2);
         }
 
         .action-group {
             margin-top: auto;
             display: flex;
             flex-direction: column;
-            gap: 8px;
+            align-items: center;
+            gap: 10px;
+            width: 100%;
+            flex: none !important;
         }
     </style>
 </head>
@@ -351,13 +387,14 @@
     <!-- 1페이지: 메인 -->
     <div id="intro-page" class="page active">
         <div class="intro-top">
+            <!-- 1. 이미지와 겹치지 않게 위에 배치된 로고 -->
             <img src="terroirbon-identity_gray.png" alt="terroirbon logo" class="intro-logo">
             
-            <div class="intro-card">
-                <img src="1page image.jpg" alt="메인 이미지" class="intro-main-img">
+            <!-- 2. 메인 이미지 + 상단 오버레이 문구 -->
+            <div class="intro-img-container">
+                <img src="1page image.png" alt="메인 이미지" class="intro-main-img">
+                <p class="intro-subject serif">1분 자가진단으로 알아보는<br>떼루아본 맞춤 포뮬라 솔루션</p>
             </div>
-            
-            <p class="intro-subject serif">1분 자가진단으로 알아보는<br>떼루아본 맞춤 포뮬라 솔루션</p>
         </div>
         
         <button class="btn-primary" onclick="startQuiz()">시작하기</button>
@@ -385,31 +422,26 @@
     <!-- 결과 페이지 -->
     <div id="result-page" class="page">
         <div class="result-header">
-            <!-- 상단 로고 -->
             <img src="terroirbon-identity_gray.png" alt="terroirbon logo" class="result-logo">
-            <!-- 결과 타이틀 (Fresh Grape 등) -->
-            <h1 class="result-title serif" id="result-type">Fresh Grape</h1>
-            <!-- 수분 충전이 필요한 피부 -> 수정 문구 -->
-            <p class="result-subtitle" id="result-subtitle">겉촉속바! 수부지형 피부</p>
         </div>
 
-        <!-- 중앙 정렬 설명 카드 -->
-        <div class="result-card" id="result-desc">
-            진단 결과 설명
+        <div class="result-card">
+            <div class="result-card-subtitle" id="result-subtitle">겉촉속바! 수부지형 피부</div>
+            <div class="result-card-desc" id="result-desc">
+                진단 결과 설명
+            </div>
         </div>
         
         <div class="recommend-card">
-            <!-- 솔루션 타이틀 변경 -->
             <p class="recommend-badge">떼루아본 LAB의 솔루션</p>
+            <h1 class="result-title serif" id="result-type">Fresh Grape</h1>
             <p class="recommend-title serif" id="result-product">
                 추천 포뮬라
             </p>
-            <!-- 추천 제품 이미지 영역 -->
             <img id="result-product-img" src="" alt="추천 제품 이미지" class="recommend-img">
         </div>
         
         <div class="action-group">
-            <!-- 버튼명 수정 -->
             <button class="btn-primary" onclick="copyResultLink()">진단 인증 후 상품 받기</button>
             <button class="btn-secondary" onclick="location.reload()">다시 진단하기</button>
         </div>
@@ -493,35 +525,34 @@
         }
     ];
 
-    // 결과 데이터 구조 업데이트 (타이틀, 서브타이틀, 제품 이미지 경로 추가)
     const results = {
         "A": {
             type: "Fresh Grape",
             subtitle: "겉촉속바! 수부지형 피부",
-            desc: "피부 겉은 오일리해 보일 수 있으나 속은 수분이 바짝 말라있는 상태에요.<br>즉각적인 수분 공급을 통해 피부 속 수분케어가 필요합니다.",
+            desc: "피부 겉은 오일리해 보일 수 있으나<br>속은 수분이 바짝 말라있는 상태에요.<br>즉각적인 수분 공급을 통해<br>피부 속 수분케어가 필요합니다.",
             product: "가볍고 산뜻한 마무리감을 가진<br><strong>그레이프셀 버블 에센스 토너</strong>를 처방해드립니다.",
-            img: "T_y.png" // 
+            img: "T_y.png"
         },
         "B": {
             type: "Deep Grape",
             subtitle: "여린 민감성 피부",
-            desc: "외부 자극과 스트레스로 인해 피부가 민감해진 상태에요.<br>피부 컨디션을 안정시키는 순한케어가 필요합니다.",
+            desc: "외부 자극과 스트레스로 인해<br>피부가 민감해진 상태에요.<br>피부 컨디션을 안정시키는 순한케어가 필요합니다.",
             product: "순하고 빠르게 건강한 피부로 회복시켜주는<br><strong>그레이프셀 탱탱 텐션 토탈 마스크팩</strong>을 처방해드립니다.",
-            img: "M_y.png" // 
+            img: "M_y.png"
         },
         "C": {
             type: "Rich Grape",
             subtitle: "탄력 부족형 피부",
-            desc: "피부의 탄력이 떨어지기 시작한 상태에요.<br>밀도 높은 퍼밍 탄력 케어로 리프팅이 필요합니다.",
+            desc: "피부의 탄력이 떨어지기 시작한 상태에요.<br>밀도 높은 퍼밍 탄력 케어로<br>리프팅이 필요합니다.",
             product: "급속도 올인원 케어 전문<br><strong>그레이프셀 퍼밍 앰플</strong>을 처방해드립니다.",
-            img: "A_y.jpg" // 
+            img: "A_y.jpg"
         },
         "D": {
             type: "Juicy Grape",
             subtitle: "피부결이 거친 피부",
-            desc: "피부 턴오버 주기가 둔화되어 칙칙하고 윤기가 부족한 상태에요.<br>맑고 자연스러운 광채를 부여하는 케어가 필요합니다.",
+            desc: "피부 턴오버 주기가 둔화되어<br>칙칙하고 윤기가 부족한 상태에요.<br>맑고 자연스러운 광채를 부여하는<br>케어가 필요합니다.",
             product: "피부장벽을 보호하면서 광채감을 선사하는<br><strong>그레이프셀 핑크캡슐 크림</strong>을 처방해드립니다.",
-            img: "C_y.jpg" // 
+            img: "C_y.jpg"
         }
     };
 
@@ -615,11 +646,7 @@
     }
 
     function copyResultLink() {
-        navigator.clipboard.writeText(window.location.href).then(() => {
-            alert('진단 페이지 링크가 복사되었습니다!');
-        }).catch(() => {
-            alert('주소창의 링크를 복사해주세요.');
-        });
+        alert('떼루아본 연구원에게 결과를 보여주세요!');
     }
 </script>
 </body>
